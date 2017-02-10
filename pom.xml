@@ -7,7 +7,31 @@
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.15</version>
+        </dependency>
+        <dependency> 
+            <groupId>com.oracle</groupId> 
+            <artifactId>ojdbc7</artifactId> 
+            <version>7</version> 
+        </dependency>
+        <dependency> 
+            <groupId>com.oracle.siebel</groupId> 
+            <artifactId>Siebel</artifactId> 
+            <version>17</version> 
+        </dependency>
+        <dependency> 
+            <groupId>com.oracle.siebelji_enu</groupId> 
+            <artifactId>SiebelJI_enu</artifactId> 
+            <version>17</version> 
+        </dependency>
+    </dependencies>
+    
+    
 </project>
