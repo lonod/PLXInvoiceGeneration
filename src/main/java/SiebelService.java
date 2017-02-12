@@ -180,6 +180,69 @@ public class SiebelService {
         return quoteItemsList;
     }
     
+    public List<Map> getQuoteItems(String quote_id,String item_type) throws SiebelException{
+        try {
+            sdb = ApplicationsConnection.ConnectSiebelServer();
+        } catch (IOException ex) {
+            ex.printStackTrace(new PrintWriter(errors));
+            MyLogging.log(Level.SEVERE, "In getCustomerDetails method. Error in connecting to Siebel",errors.toString());
+        }
+        Map order = new HashMap();
+        List<Map> orderList = new ArrayList<Map>();
+        SiebelBusObject quoteBusObject = sdb.getBusObject("Quote");
+        SiebelBusComp quoteBusComp = quoteBusObject.getBusComp("Quote");
+        quoteBusComp.setViewMode(3);
+        quoteBusComp.clearToQuery();
+        quoteBusComp.activateField("Id");
+        quoteBusComp.activateField("Order Number");
+        quoteBusComp.activateField("Currency Code");
+        quoteBusComp.setSearchSpec("Id", quote_id);
+        quoteBusComp.executeQuery2(true,true);
+        if (quoteBusComp.firstRecord()) {
+            order.put("Order Number", quoteBusComp.getFieldValue("Order Number"));
+            order.put("Currency Code", quoteBusComp.getFieldValue("Currency Code"));
+            orderList.add(order);
+            MyLogging.log(Level.INFO,"Order Number is: {0}"+quoteBusComp.getFieldValue("Order Number"));                     
+            MyLogging.log(Level.INFO,"Currency Code is: {0}"+quoteBusComp.getFieldValue("Currency Code"));
+        }
+        quoteBusComp.release();        
+        quoteBusObject.release();
+        sdb.logoff();
+        
+        return orderList;                
+    }
+                
+    public List<Map> getCustomerDetails(String quote_id) throws SiebelException{
+        try {
+            sdb = ApplicationsConnection.ConnectSiebelServer();
+        } catch (IOException ex) {
+            ex.printStackTrace(new PrintWriter(errors));
+            MyLogging.log(Level.SEVERE, "In getCustomerDetails method. Error in connecting to Siebel",errors.toString());
+        }
+        Map order = new HashMap();
+        List<Map> orderList = new ArrayList<Map>();
+        SiebelBusObject quoteBusObject = sdb.getBusObject("Quote");
+        SiebelBusComp quoteBusComp = quoteBusObject.getBusComp("Quote");
+        quoteBusComp.setViewMode(3);
+        quoteBusComp.clearToQuery();
+        quoteBusComp.activateField("Id");
+        quoteBusComp.activateField("Order Number");
+        quoteBusComp.activateField("Currency Code");
+        quoteBusComp.setSearchSpec("Id", quote_id);
+        quoteBusComp.executeQuery2(true,true);
+        if (quoteBusComp.firstRecord()) {
+            order.put("Order Number", quoteBusComp.getFieldValue("Order Number"));
+            order.put("Currency Code", quoteBusComp.getFieldValue("Currency Code"));
+            orderList.add(order);
+            MyLogging.log(Level.INFO,"Order Number is: {0}"+quoteBusComp.getFieldValue("Order Number"));                     
+            MyLogging.log(Level.INFO,"Currency Code is: {0}"+quoteBusComp.getFieldValue("Currency Code"));
+        }
+        quoteBusComp.release();        
+        quoteBusObject.release();
+        sdb.logoff();
+        
+        return orderList;
+    }
     
     public static void main(String[] args){
         SiebelService ss = new SiebelService();
