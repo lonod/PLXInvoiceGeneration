@@ -219,29 +219,56 @@ public class SiebelService {
             ex.printStackTrace(new PrintWriter(errors));
             MyLogging.log(Level.SEVERE, "In getCustomerDetails method. Error in connecting to Siebel",errors.toString());
         }
-        Map order = new HashMap();
-        List<Map> orderList = new ArrayList<Map>();
+        String AccountId;
+        Map customer = new HashMap();
+        List<Map> customerDetailList = new ArrayList<Map>();
+        SiebelBusObject accountBusObject = sdb.getBusObject("Account");
+        SiebelBusComp accountBusComp = accountBusObject.getBusComp("Account");
         SiebelBusObject quoteBusObject = sdb.getBusObject("Quote");
         SiebelBusComp quoteBusComp = quoteBusObject.getBusComp("Quote");
         quoteBusComp.setViewMode(3);
         quoteBusComp.clearToQuery();
-        quoteBusComp.activateField("Id");
-        quoteBusComp.activateField("Order Number");
-        quoteBusComp.activateField("Currency Code");
+        quoteBusComp.activateField("Name");
+        quoteBusComp.activateField("Account");
+        quoteBusComp.activateField("Account Id");
         quoteBusComp.setSearchSpec("Id", quote_id);
         quoteBusComp.executeQuery2(true,true);
         if (quoteBusComp.firstRecord()) {
-            order.put("Order Number", quoteBusComp.getFieldValue("Order Number"));
-            order.put("Currency Code", quoteBusComp.getFieldValue("Currency Code"));
-            orderList.add(order);
-            MyLogging.log(Level.INFO,"Order Number is: {0}"+quoteBusComp.getFieldValue("Order Number"));                     
-            MyLogging.log(Level.INFO,"Currency Code is: {0}"+quoteBusComp.getFieldValue("Currency Code"));
+            customer.put("Name", quoteBusComp.getFieldValue("Name"));
+            customer.put("Account", quoteBusComp.getFieldValue("Account"));
+            customer.put("AccountId", quoteBusComp.getFieldValue("Account Id"));
+            AccountId = quoteBusComp.getFieldValue("Account Id");            
+            MyLogging.log(Level.INFO,"Name: {0}"+quoteBusComp.getFieldValue("Name"));                     
+            MyLogging.log(Level.INFO,"Account: {0}"+quoteBusComp.getFieldValue("Account"));
+            MyLogging.log(Level.INFO,"AccountId: {0}"+quoteBusComp.getFieldValue("Account Id"));
+            accountBusComp.setViewMode(3);
+            accountBusComp.clearToQuery();
+            accountBusComp.activateField("Street Address");
+            accountBusComp.activateField("City");
+            accountBusComp.activateField("State");
+            accountBusComp.activateField("Country");
+            accountBusComp.activateField("Main Phone Number");
+            accountBusComp.setSearchSpec("Id", AccountId);
+            accountBusComp.executeQuery2(true,true);
+            if (accountBusComp.firstRecord()) {
+                String temp_addr ;
+                temp_addr = quoteBusComp.getFieldValue("Street Address")+","+quoteBusComp.getFieldValue("City")+""+quoteBusComp.getFieldValue("State")+","+quoteBusComp.getFieldValue("Country");
+                customer.put("Address",temp_addr);
+                customer.put("Main Phone Number", quoteBusComp.getFieldValue("Main Phone Number"));                          
+                MyLogging.log(Level.INFO,"Address: {0}"+temp_addr);                     
+                MyLogging.log(Level.INFO,"Main Phone Number: {0}"+quoteBusComp.getFieldValue("Main Phone Number"));                
+            }
+            
+            customerDetailList.add(customer);
         }
+        accountBusComp.release();
+        accountBusObject.release();
         quoteBusComp.release();        
         quoteBusObject.release();
+        
         sdb.logoff();
         
-        return orderList;
+        return customerDetailList;
     }
     
     public static void main(String[] args){
@@ -249,7 +276,8 @@ public class SiebelService {
         try {
             //1-LQ82
             //ss.getOrderItems("1-KS36");
-            ss.getQuoteItems("1-LOOQ");
+            //ss.getQuoteItems("1-LOOQ");
+            ss.getCustomerDetails("1-1KMI6");
         } catch (SiebelException ex) {
             LOG.log(Level.SEVERE, "In main method", ex);
         }

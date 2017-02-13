@@ -20,17 +20,17 @@
             <groupId>com.oracle</groupId> 
             <artifactId>ojdbc7</artifactId> 
             <version>7</version> 
-        </dependency>
-        <dependency> 
+        </dependency><dependency> 
             <groupId>com.oracle.siebel</groupId> 
             <artifactId>Siebel</artifactId> 
-            <version>17</version> 
+            <version>1</version> 
         </dependency>
         <dependency> 
             <groupId>com.oracle.siebelji_enu</groupId> 
             <artifactId>SiebelJI_enu</artifactId> 
-            <version>17</version> 
+            <version>1</version> 
         </dependency>
+        
     </dependencies>
     
     
